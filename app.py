@@ -59,7 +59,6 @@ def get_tone_instruction(sentiment, rating):
         return "Generate a helpful, friendly response thanking the user and showing appreciation in two lines."
     else:
         return "Generate a helpful, friendly response acknowledging the issue and showing empathy in two lines."
-
 def get_prompt_template(rating: int, sentiment: str, matched_q: str = "", matched_a: str = ""):
     has_faq = pd.notna(matched_q) and pd.notna(matched_a) and matched_q.strip() and matched_a.strip()
 
@@ -67,30 +66,29 @@ def get_prompt_template(rating: int, sentiment: str, matched_q: str = "", matche
         template = """
 A user left a {sentiment} review: "{user_input}" with a rating of {rating} stars.
 
-Please rephrase the below response: 
+Please rephrase the following response without asking for a good review or rating:
 {matched_answer}
 
-And should not ask them to give good review or rating.
-
-Generate a helpful and accurate response. 
-- Be empathic and conversational.
-- Clearly explain exactly.
-- Only suggest contacting support if the response don’t fully resolve the issue.
-- if needed only provide Contact details: care@zaggle.in
-
+The response should:
+- Be empathetic, conversational, and clear.
+- Provide a helpful, accurate explanation based on the available information.
+- Avoid phrases like "we're working on it" or "we will fix it soon".
+- Avoid closing phrases like "Take care", "Regards", "Best", or any name or signature.
+- If the issue cannot be fully resolved in the response, suggest the user contact: care@zaggle.in
 """
     else:
         template = """
 A user left a {sentiment} review: "{user_input}" with a rating of {rating} stars.
 
-{tone_instruction}
+Please write a helpful, clear, and empathetic response based on the user's input.
 
-And should not ask them to give good review or rating.
-
-- Use the user's input to empathize response.
-- Only suggest contacting support if the issue cannot be resolved in the reply.
-- If needed, include: Contact - care@zaggle.in
-
+The response should:
+- Avoid asking for good reviews or ratings.
+- Be conversational and understanding.
+- Avoid phrases like "we're working on it" or "we will fix it soon".
+- Avoid closing phrases like "Take care", "Regards", "Best", or any name or signature.
+- If the issue can be addressed directly, explain how.
+- If it cannot be resolved in this reply, suggest the user contact: care@zaggle.in
 """
 
     return PromptTemplate.from_template(template)
