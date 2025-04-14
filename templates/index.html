@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ Chatbot</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 10px auto;
+        width: 800px;
+        padding: 25px;
+        border-radius: 20px;
+        background-color: #ffffff;
+        min-height: 100vh;
+      }
+      .star-rating {
+        direction: rtl;
+        width: max-content;
+        margin-bottom: 10px;
+        display: flex;
+        font-size: 2rem;
+        
+      }
+
+      .star-rating.list {
+        font-size: 1rem;
+      }
+  
+      .star-rating input[type="radio"] {
+        display: none;
+      }
+  
+      .star-rating label {
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s;
+        margin: 10px;
+      }
+
+      .star-rating label.list-label {
+          margin: 2px;
+      }
+  
+      .star-rating input[type="radio"]:checked ~ label {
+        color: #01875f;
+      }
+  
+      .star-rating input:disabled ~ label:hover,
+      .star-rating label:hover,
+      .star-rating label:hover ~ label {
+        color: #01875f;
+      }
+
+      .star-rating input:disabled ~ label {
+        pointer-events: none;
+      }
+      textarea:focus-visible {
+        border-color: #01875f !important;
+        outline: none;
+      }
+      .review-textarea {
+        display: none;
+      }
+    </style>
+</head>
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0px;">
+      <div style="display: flex; align-items: baseline; flex-direction: column;">
+        <p style="font-size: 48px; font-weight: 600; color: black; margin: 8px;">Zaggle</p>
+        <p style="font-size: 16px; color: #01875F; font-weight: 500;">Zaggle Prepaid Ocean Services Ltd.</p>
+      </div>
+      <div>
+        <img src="../static/zaggle-playstore.webp" alt="zaggle-logo" style="height: 150px; width: 150px; border: 1px solid #CAD1D5; border-radius: 10px; box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);" />
+      </div>
+    </div>
+    <div>
+      <p style="color: #202127; font-weight: 800; font-size: 16px;">Rate this app</p>
+      <p style="color: #CAD1D5;">Tell others what you think.</p>
+    </div>
+    <form method="POST">
+        <div class="star-rating">
+          <input type="radio" id="star5" name="rating" value="5" onclick="showReview()">
+          <label for="star5">&#9733;</label>
+          <input type="radio" id="star4" name="rating" value="4" onclick="showReview()">
+          <label for="star4">&#9733;</label>
+          <input type="radio" id="star3" name="rating" value="3" onclick="showReview()">
+          <label for="star3">&#9733;</label>
+          <input type="radio" id="star2" name="rating" value="2" onclick="showReview()">
+          <label for="star2">&#9733;</label>
+          <input type="radio" id="star1" name="rating" value="1" onclick="showReview()">
+          <label for="star1">&#9733;</label>
+        </div>
+        <div class="review-textarea">
+          <textarea name="review" rows="5" cols="50" placeholder="Describe your experience" style="width: 100%; padding: 15px 15px 0px 15px; border: 2px solid #CAD1D5; border-radius: 10px;"></textarea><br>
+          <input type="submit" value="Submit" style="border: none; background-color: #01875F; color: #ffffff; padding: 10px 20px; border-radius: 8px; font-weight: 600; margin: 10px auto 10px 94%; cursor: pointer;">
+        </div>
+    </form>
+    {% if user_reviews %}
+    <p style="color: #202127; font-weight: 800; font-size: 16px;">Review & Ratings</p>
+    {% endif %}
+    {% for review in user_reviews %}
+    <div style="margin: 20px 0px;">
+      <div class="star-rating list">
+        <input type="radio" id="star5_{{ loop.index }}" name="rating_{{ loop.index }}" value="5" {% if review.rating == 5 %}checked{% endif %} disabled>
+        <label class="list-label" for="star5_{{ loop.index }}">&#9733;</label>
+        <input type="radio" id="star4_{{ loop.index }}" name="rating_{{ loop.index }}" value="4" {% if review.rating == 4 %}checked{% endif %} disabled>
+        <label class="list-label" for="star4_{{ loop.index }}">&#9733;</label>
+        <input type="radio" id="star3_{{ loop.index }}" name="rating_{{ loop.index }}" value="3" {% if review.rating == 3 %}checked{% endif %} disabled>
+        <label class="list-label" for="star3_{{ loop.index }}">&#9733;</label>
+        <input type="radio" id="star2_{{ loop.index }}" name="rating_{{ loop.index }}" value="2" {% if review.rating == 2 %}checked{% endif %} disabled>
+        <label class="list-label" for="star2_{{ loop.index }}">&#9733;</label>
+        <input type="radio" id="star1_{{ loop.index }}" name="rating_{{ loop.index }}" value="1" {% if review.rating == 1 %}checked{% endif %} disabled>
+        <label class="list-label" for="star1_{{ loop.index }}">&#9733;</label>
+      </div>
+        <p>{{ review.input }}</p>
+        <div style="padding: 20px; margin-left: 20px; border-radius: 10px; background-color: #f8f9fa;">
+          <p>{{ review.response }}</p>
+          <p style="margin-bottom: 0px!important;">
+            Thanks & Regards,
+          </p>
+          <p style="margin-top: 0px!important;">
+            Team Zaggle
+          </p>
+        </div>
+        <hr style="height: 1px; width: 100%; border: none; background-color: #CAD1D5;">
+    </div>
+    {% endfor %}
+
+
+    <script>
+      function showReview() {
+        document.querySelector('.review-textarea').style.display = 'block';
+      }
+    </script>
+</body>
+</html>
