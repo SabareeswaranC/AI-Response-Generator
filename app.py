@@ -22,7 +22,7 @@ sentiment_pipeline = pipeline("sentiment-analysis")
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
 if not openai_api_key:
-    raise ValueError("Missing OpenAI API Key. Please set OPENAI_API_KEY in your .env file.")
+    raise ValueError("Missing OpenAI API Key. Please provide OPENAI_API_KEY")
 
 llm = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-4o")
 
@@ -31,7 +31,6 @@ df = pd.read_csv("chatbot-faqs.csv")
 # ---------------------- Preprocessing Function ----------------------
 
 def clean_text(text):
-    """Clean text: Normalize spaces, remove unwanted non-printable characters, but keep special characters like emojis."""
     text = unicodedata.normalize("NFKD", text) 
     text = re.sub(r'[^\x20-\x7E\u0080-\uFFFF]', '', text)
     text = re.sub(r'\s+', ' ', text).strip()
@@ -129,9 +128,7 @@ def home():
     if request.method == "POST":
         user_input = request.form.get("review", "").strip()
         rating = int(request.form.get("rating", 0))
-        if not user_input and rating == 0:
-            response = "Please enter a review."
-        else:
+        if user_input or rating:
             try:
                 sentiment = get_sentiment_label(user_input)
                 matched_q, matched_a = find_similar_question(user_input)
